@@ -1,0 +1,16 @@
+services:
+  ollama:
+    image: ollama/ollama:latest
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+    volumes:
+      - "E:/docker/ollama:/root/.ollama"
+    gpus: all
+    entrypoint: >
+      bash -c "
+      ollama serve &
+      sleep 5 &&
+      ollama pull phi4:14b &&
+      wait
+      "
