@@ -4,11 +4,11 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class Card {
-    private String name;
+    private String word;
     private String icon;
 
-    public Card(String name, String icon) {
-        this.name = name;
+    public Card(String word, String icon) {
+        this.word = word;
         this.icon = icon;
     }
 
@@ -16,7 +16,7 @@ public class Card {
         return icon;
     }
 
-    public String getName() {
-        return name;
+    public String getWord() {
+        return word;
     }
 }
