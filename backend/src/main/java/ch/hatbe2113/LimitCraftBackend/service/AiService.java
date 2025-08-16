@@ -18,7 +18,7 @@ public class AiService {
 
     public Card getCardFromWords(String word1, String word2) {
         String word = this.combineWords(word1, word2);
-        //word = word.substring(0, 1).toUpperCase() + word.substring(1);
+        word = word.substring(0, 1).toUpperCase() + word.substring(1);
 
         String icon = this.getIcon(word);
 

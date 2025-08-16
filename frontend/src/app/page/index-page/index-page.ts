@@ -1,9 +1,10 @@
-import { CdkDragEnd, DragDropModule, Point } from '@angular/cdk/drag-drop';
+import { CdkDragEnd, CdkDragMove, DragDropModule, Point } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import PlaygroundCard from '../../model/PlaygroundCard';
-import Card from '../../model/Card';
 import CardService from '../../service/CardService';
+import SidebarCard from '../../model/SidebarCard';
+import Card from '../../model/Card';
 
 @Component({
   selector: 'app-index-page',
@@ -12,25 +13,50 @@ import CardService from '../../service/CardService';
   styleUrl: './index-page.css',
 })
 export class IndexPage implements OnInit {
-  @ViewChildren('dragEl') dragEls!: QueryList<ElementRef<HTMLDivElement>>;
+  @ViewChildren('dragElRef') dragEls!: QueryList<ElementRef<HTMLElement>>;
+  @ViewChild('playgroundElRef', { static: true }) playgroundRef!: ElementRef<HTMLElement>;
 
   protected playGroundCards: PlaygroundCard[] = [];
+  protected sidebarCards: SidebarCard[] = [];
 
   public constructor(private cardService: CardService) {}
 
   public ngOnInit() {
-    this.createCard('💧', 'Water', 0, 0);
-    this.createCard('🔥', 'Fire', 30, 50);
-    this.createCard('🌎', 'Earth', 100, 100);
+    this.createSideBarCard('💧', 'Water');
+    this.createSideBarCard('🔥', 'Fire');
+    this.createSideBarCard('🌬️', 'Wind');
+    this.createSideBarCard('🌎', 'Earth');
   }
 
-  protected onDragStarted(id: string) {
+  protected onSidebarCardMoved(event: CdkDragMove<SidebarCard>) {
+    // TODO: find center
+    this.updateSidebarCardPosition(
+      event.source.data.card.localId,
+      event.pointerPosition.x,
+      event.pointerPosition.y
+    );
+  }
+
+  protected onSidebarCardDragEnded(event: CdkDragEnd<SidebarCard>) {
+    event.source.reset();
+
+    const card = (event.source.data as SidebarCard).card;
+
+    this.createPlaygroundCard(
+      card.icon,
+      card.word,
+      event.source.data.lastX,
+      event.source.data.lastY
+    );
+  }
+
+  protected onPlaygroundCardDragStarted(id: string) {
     const movedEl = this.dragEls.find((el) => el.nativeElement.dataset['id'] === id);
     if (!movedEl) return;
     movedEl.nativeElement.style.zIndex = '999';
   }
 
-  protected async onDragEnded(event: CdkDragEnd, id: string) {
+  protected async onPlaygroundCardDragEnded(event: CdkDragEnd, id: string) {
     this.updatePlaygroundCardPosition(id, event.source.getFreeDragPosition());
 
     const movedEl = this.dragEls.find((el) => el.nativeElement.dataset['id'] === id);
@@ -57,16 +83,15 @@ export class IndexPage implements OnInit {
         this.removeCardById(moved.card.localId);
         this.removeCardById(other.card.localId);
 
-        const loadingId = this.createCard('⏳', 'Loading', other.x, other.y, true);
+        const loadingId = this.createPlaygroundCard('⏳', 'Loading', other.x, other.y, true);
 
-        // TODO: delete waiting
         try {
           const card = await this.cardService.combineWords(moved.card.word, other.card.word);
 
-          this.createCard(card.icon, card.word, other.x, other.y);
+          this.createPlaygroundCard(card.icon, card.word, other.x, other.y);
         } catch (error) {
           console.log(error);
-          this.createCard('❌', 'ERROR', other.x, other.y);
+          this.createPlaygroundCard('❌', 'ERROR', other.x, other.y);
         } finally {
           this.removeCardById(loadingId);
         }
@@ -74,9 +99,17 @@ export class IndexPage implements OnInit {
     }
   }
 
+  private isThisCardIntersectingWithAPlayGroundCard(card: Card) {}
+
   private updatePlaygroundCardPosition(id: string, position: Point) {
     this.playGroundCards = this.playGroundCards.map((card) =>
       card.card.localId === id ? { ...card, x: position.x, y: position.y } : card
+    );
+  }
+
+  private updateSidebarCardPosition(id: string, x: number, y: number) {
+    this.sidebarCards = this.sidebarCards.map((card) =>
+      card.card.localId === id ? { ...card, lastX: x, lastY: y } : card
     );
   }
 
@@ -88,7 +121,7 @@ export class IndexPage implements OnInit {
     return a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
   }
 
-  protected onDeleteItem(event: Event) {
+  protected onPlaygroundCardDelete(event: Event) {
     event.preventDefault();
     const target = event.target as HTMLDivElement;
     const card = target.closest('.item') as HTMLDivElement;
@@ -103,7 +136,7 @@ export class IndexPage implements OnInit {
     this.playGroundCards = this.playGroundCards.filter((card) => card.card.localId !== id);
   }
 
-  protected createCard(
+  protected createPlaygroundCard(
     icon: string,
     word: string,
     x: number,
@@ -117,6 +150,12 @@ export class IndexPage implements OnInit {
       y,
       isLoading,
     });
+    return localId;
+  }
+
+  protected createSideBarCard(icon: string, word: string): string {
+    const localId = crypto.randomUUID();
+    this.sidebarCards.push({ card: { icon, word, localId }, lastX: 0, lastY: 0 });
     return localId;
   }
 }

@@ -2,16 +2,22 @@
   position: fixed;
   inset: 0;
   display: grid;
-  grid-template-columns: 1fr 200px;
+  grid-template-columns: 1fr 300px;
 }
 
 .playground {
   position: relative;
   background-color: #1c1c1c;
+  overflow: hidden;
 }
 
 .sidebar {
   background-color: #3c3c3c;
+  padding: 20px;
+  width: 100%;
+}
+.sidebar .item {
+  margin: 1px;
 }
 
 .item {
@@ -31,10 +37,4 @@
 
 .item.absolute {
   position: absolute;
-}
-
-.item .icon {
-}
-
-.item .label {
 }
