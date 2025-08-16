@@ -4,7 +4,6 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
-  NgZone,
   OnInit,
   QueryList,
   ViewChild,
@@ -13,7 +12,6 @@ import {
 import PlaygroundCard from '../../model/PlaygroundCard';
 import CardService from '../../service/CardService';
 import SidebarCard from '../../model/SidebarCard';
-import { take } from 'rxjs';
 
 @Component({
   selector: 'app-index-page',
@@ -28,11 +26,7 @@ export class IndexPage implements OnInit {
   protected playGroundCards: PlaygroundCard[] = [];
   protected sidebarCards: SidebarCard[] = [];
 
-  public constructor(
-    private cardService: CardService,
-    private cdr: ChangeDetectorRef,
-    private zone: NgZone
-  ) {}
+  public constructor(private cardService: CardService, private cdr: ChangeDetectorRef) {}
 
   public ngOnInit() {
     this.createSideBarCard('💧', 'Water');
@@ -228,9 +222,15 @@ export class IndexPage implements OnInit {
     return card;
   }
 
-  protected createSideBarCard(icon: string, word: string): string {
-    const localId = crypto.randomUUID();
-    this.sidebarCards.push({ card: { icon, word, localId }, lastX: 0, lastY: 0 });
-    return localId;
+  protected createSideBarCard(icon: string, word: string): SidebarCard | null {
+    for (const card of this.sidebarCards) {
+      if (card.card.word === word) {
+        return null;
+      }
+    }
+
+    const sidebarCard = { card: { icon, word, localId: crypto.randomUUID() }, lastX: 0, lastY: 0 };
+    this.sidebarCards.push(sidebarCard);
+    return sidebarCard;
   }
 }
