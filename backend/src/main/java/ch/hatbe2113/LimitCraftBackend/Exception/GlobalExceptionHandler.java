@@ -1,4 +1,4 @@
-package ch.hatbe2113.LimitCraftBackend;
+package ch.hatbe2113.LimitCraftBackend.Exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

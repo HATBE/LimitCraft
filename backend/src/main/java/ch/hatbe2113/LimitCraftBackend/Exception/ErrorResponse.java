@@ -1,4 +1,4 @@
-package ch.hatbe2113.LimitCraftBackend;
+package ch.hatbe2113.LimitCraftBackend.Exception;
 
 import lombok.Getter;
 import lombok.Setter;

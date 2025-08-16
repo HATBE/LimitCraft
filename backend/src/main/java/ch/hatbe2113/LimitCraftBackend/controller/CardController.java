@@ -1,9 +1,11 @@
 package ch.hatbe2113.LimitCraftBackend.controller;
 
+import ch.hatbe2113.LimitCraftBackend.Exception.ErrorResponse;
 import ch.hatbe2113.LimitCraftBackend.entities.Card;
 import ch.hatbe2113.LimitCraftBackend.entities.requests.PostCardRequest;
 import ch.hatbe2113.LimitCraftBackend.service.CardService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -26,6 +28,11 @@ public class CardController {
     @PostMapping(value = {"", "/"})
     public ResponseEntity<?> postCards(@RequestBody @Valid PostCardRequest request) {
         Card card = this.cardService.postCard(request);
+
+        if (card == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse("Error while fetching card", "CARD_CREATION_ERROR"));
+        }
+
         return ResponseEntity.ok(card);
     }
 }

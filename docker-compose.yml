@@ -3,7 +3,7 @@ services:
     image: ollama/ollama:latest
     restart: unless-stopped
     ports:
-      - "11434:11434"
+      - "11435:11434"
     volumes:
       - "E:/docker/ollama:/root/.ollama"
     gpus: all
