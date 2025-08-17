@@ -1,3 +1,5 @@
+<header>Limit Craft</header>
+
 <div class="app" (contextmenu)="disableContext($event)">
   <div class="playground" #playgroundElRef>
     @for (card of playGroundCards; track card.localId) {
@@ -21,19 +23,29 @@
   </div>
 
   <div class="sidebar">
-    @for (card of sidebarCards; track card.localId) {
-    <div
-      class="item"
-      cdkDrag
-      [cdkDragData]="card"
-      [cdkDragBoundary]="'.app'"
-      [attr.data-id]="card.localId"
-      (cdkDragMoved)="onSidebarCardMoved($event)"
-      (cdkDragEnded)="onSidebarCardDragEnded($event)"
-    >
-      <span class="icon">{{ card.card.icon }}</span>
-      <span class="label">{{ card.card.word }}</span>
+    <div class="item-container">
+      @for (card of sidebarCards; track card.localId) {
+      <div
+        class="item"
+        cdkDrag
+        [cdkDragData]="card"
+        [cdkDragBoundary]="'.app'"
+        [attr.data-id]="card.localId"
+        (cdkDragMoved)="onSidebarCardMoved($event)"
+        (cdkDragEnded)="onSidebarCardDragEnded($event)"
+      >
+        <span class="icon">{{ card.card.icon }}</span>
+        <span class="label">{{ card.card.word }}</span>
+      </div>
+      }
     </div>
-    }
+    <!--<div class="searchbar">
+      <input type="text" placeholder="search" />
+    </div>-->
   </div>
 </div>
+
+<footer>
+  Clone of
+  <a target="_blank" draggable="false" href="https://neal.fun/infinite-craft">Infinite Craft</a>
+</footer>

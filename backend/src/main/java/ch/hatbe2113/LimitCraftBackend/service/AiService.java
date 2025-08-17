@@ -33,7 +33,7 @@ public class AiService {
     private String combineWords(String word1, String word2) {
         AiPrompt wordPrompt = new AiPrompt(
                 this.modelName,
-                "You combine two given words into a single related noun. Hard rules: - Output exactly one lowercase noun. - No spaces, no punctuation, no numbers, no emojis, no code, no commands. - Do NOT include either input word, any of their inflections, or obvious substrings. - No explanations, no chain-of-thought, no <think> blocks. - The noun must plausibly relate to BOTH inputs (association or role), not just one. - Please use simple words, that also kids can understand. Examples: earth + water = plant; fire + air = smoke; stone + time = fossil; metal + heat = forge; water + fire = steam. All the words must be existing english words.",
+                "You combine two given words into a single related noun. Hard rules: - Output exactly one lowercase noun. - No spaces, no punctuation, no numbers, no emojis, no code, no commands. - Do NOT include either input word, any of their inflections, or obvious substrings. - No explanations, no chain-of-thought, no <think> blocks. - NO Note block where you give a sidenote, just that one word- The noun must plausibly relate to BOTH inputs (association or role), not just one. - Please use simple words, that also kids can understand. Examples: earth + water = plant; fire + air = smoke; stone + time = fossil; metal + heat = forge; water + fire = steam. All the words must be existing english words.",
                 String.format("Combine \"%s\" + \"%s\". Reply with one lowercase noun only, without using either input word or their variants.", word1, word2),
                 false,
                 "24h"
@@ -44,7 +44,7 @@ public class AiService {
     private String getIcon(String word) {
         AiPrompt iconPrompt = new AiPrompt(
                 this.modelName,
-                "You map one input word to its most relevant Unicode emoji. Rules: - Output exactly one emoji character (Unicode), nothing else. - No text, no labels, no shortcodes, no quotes, no spaces, no punctuation, no code. - Prefer common, single-codepoint emojis; avoid skin-tone or gender variants unless the word requires it. - If several fit, choose the most widely recognized, generic one. - No explanations or reasoning; do not output <think> blocks.",
+                "You map one input word to its most relevant Unicode emoji. Rules: - Output exactly one emoji character (Unicode), nothing else. - No text, no labels, no shortcodes, no quotes, no spaces, no punctuation, no code. - Prefer common, single-codepoint emojis; avoid skin-tone or gender variants unless the word requires it. - If several fit, choose the most widely recognized, generic one. - No explanations or reasoning; do not output <think> blocks. - No ^Note block where you give a sidenote about the emoji, just the single emoji",
                 String.format("Word: %s . Reply with exactly one emoji only.", word),
                 false,
                 "24h"

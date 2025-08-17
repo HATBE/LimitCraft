@@ -12,6 +12,32 @@ html {
   padding: 0;
 }
 
+header {
+  z-index: 1;
+  position: fixed;
+  top: 0;
+  color: white;
+  display: inline-block;
+  margin: 10px;
+  font-size: 30px;
+  font-weight: 700;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+footer {
+  z-index: 1;
+  position: fixed;
+  bottom: 0;
+  color: white;
+  display: inline-block;
+  margin: 7px;
+  font-size: 15px;
+}
+
+footer a {
+  color: white;
+}
+
 body {
   overflow-x: hidden;
 }
@@ -32,13 +58,32 @@ body {
 }
 
 .sidebar {
+  position: relative;
   background-color: #3c3c3c;
-  padding: 20px;
+  border-left: 1px rgb(92, 92, 92) solid;
   width: 100%;
   min-height: 100dvh;
 }
+.sidebar .item-container {
+  padding: 20px;
+  margin-bottom: 50px;
+}
+
 .sidebar .item {
   margin: 1px;
+}
+
+.sidebar .searchbar {
+  position: fixed;
+  bottom: 0;
+  width: 400px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.sidebar .searchbar input {
+  width: 400px;
+  padding: 10px;
 }
 
 .item {
@@ -58,4 +103,11 @@ body {
 
 .item.absolute {
   position: absolute;
+}
+
+input,
+input:active,
+input:focus {
+  outline: none;
+  border: none;
 }
