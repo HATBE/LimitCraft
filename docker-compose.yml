@@ -14,3 +14,16 @@ services:
       ollama pull phi4:14b &&
       wait
       "
+  database:
+    image: mariadb:11
+    container_name: database
+    ports:
+      - 33306:3306
+    environment:
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_DATABASE: limitcraft
+      MARIADB_USER: user
+      MARIADB_PASSWORD: password
+    volumes:
+      - "E:/docker/mariadb:/var/lib/mysql"
+    restart: unless-stopped

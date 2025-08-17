@@ -7,6 +7,6 @@ public class AiResponse {
     private String response;
 
     public String getResponse() {
-        return response;
+        return this.response;
     }
 }

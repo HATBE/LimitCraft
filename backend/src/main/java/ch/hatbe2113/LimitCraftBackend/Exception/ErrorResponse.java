@@ -1,12 +1,8 @@
 package ch.hatbe2113.LimitCraftBackend.Exception;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import java.util.List;
 
-@Setter
-@Getter
+
 public class ErrorResponse {
     private String message;
     private String code;
@@ -21,5 +17,17 @@ public class ErrorResponse {
         this.message = message;
         this.code = code;
         this.errors = errors;
+    }
+
+    public List<String> getErrors() {
+        return errors;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public String getMessage() {
+        return message;
     }
 }

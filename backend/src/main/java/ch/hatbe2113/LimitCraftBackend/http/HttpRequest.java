@@ -29,4 +29,8 @@ public class HttpRequest {
     public Response get(String url) {
         return this.baseRequest(url).get();
     }
+
+    public void close() {
+        this.client.close();
+    }
 }

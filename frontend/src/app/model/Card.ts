@@ -1,5 +1,5 @@
 export default interface Card {
-  localId: string;
+  id: string;
   word: string;
   icon: string;
 }

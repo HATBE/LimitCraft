@@ -1,16 +1,16 @@
 <div class="app">
   <div class="playground" #playgroundElRef>
-    @for (card of playGroundCards; track card.card.localId) {
+    @for (card of playGroundCards; track card.localId) {
     <div
       #dragElRef
       class="item absolute"
       cdkDrag
       [cdkDragBoundary]="'.playground'"
       [cdkDragFreeDragPosition]="{ x: card.x, y: card.y }"
-      [attr.data-id]="card.card.localId"
+      [attr.data-id]="card.localId"
       (contextmenu)="onPlaygroundCardDelete($event)"
-      (cdkDragEnded)="onPlaygroundCardDragEnded($event, card.card.localId)"
-      (cdkDragStarted)="onPlaygroundCardDragStarted(card.card.localId)"
+      (cdkDragEnded)="onPlaygroundCardDragEnded($event, card.localId)"
+      (cdkDragStarted)="onPlaygroundCardDragStarted(card.localId)"
       [cdkDragDisabled]="card.isLoading"
       appZIndexOnCardDrag
     >
@@ -21,13 +21,13 @@
   </div>
 
   <div class="sidebar">
-    @for (card of sidebarCards; track card.card.localId) {
+    @for (card of sidebarCards; track card.localId) {
     <div
       class="item"
       cdkDrag
       [cdkDragData]="card"
       [cdkDragBoundary]="'.app'"
-      [attr.data-id]="card.card.localId"
+      [attr.data-id]="card.localId"
       (cdkDragMoved)="onSidebarCardMoved($event)"
       (cdkDragEnded)="onSidebarCardDragEnded($event)"
     >

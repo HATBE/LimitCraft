@@ -8,5 +8,5 @@ import { IndexPage } from './page/index-page/index-page';
   styleUrl: './app.css',
 })
 export class App {
-  protected readonly title = signal('LimitCraftFrontend');
+  protected readonly title = signal('Limit Craft');
 }

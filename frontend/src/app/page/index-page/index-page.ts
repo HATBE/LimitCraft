@@ -38,7 +38,7 @@ export class IndexPage implements OnInit {
 
   protected onSidebarCardMoved(event: CdkDragMove<SidebarCard>): void {
     this.updateSidebarCardPosition(
-      event.source.data.card.localId,
+      event.source.data.localId,
       event.pointerPosition.x,
       event.pointerPosition.y
     );
@@ -62,14 +62,14 @@ export class IndexPage implements OnInit {
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         const cardEl = this.dragEls.find(
-          (el) => el.nativeElement.dataset['id'] === created.card.localId
+          (el) => el.nativeElement.dataset['id'] === created.localId
         );
         if (!cardEl) return;
 
-        const intersecting = this.getIntersectingPlaygroundCard(created.card.localId, cardEl);
+        const intersecting = this.getIntersectingPlaygroundCard(created.localId, cardEl);
         if (!intersecting) return;
 
-        const moved = this.findPlayGroundCardById(created.card.localId);
+        const moved = this.findPlayGroundCardById(created.localId);
         if (moved) {
           this.matchCards(intersecting, moved);
         }
@@ -92,10 +92,7 @@ export class IndexPage implements OnInit {
 
     if (!moved) return;
 
-    const intersectingPlaygroundCard = this.getIntersectingPlaygroundCard(
-      moved.card.localId,
-      movedEl
-    );
+    const intersectingPlaygroundCard = this.getIntersectingPlaygroundCard(moved.localId, movedEl);
 
     if (!intersectingPlaygroundCard) return;
 
@@ -108,8 +105,8 @@ export class IndexPage implements OnInit {
   ): Promise<void> {
     if (!intersectingPlaygroundCard) return;
 
-    this.removeCardById(moved.card.localId);
-    this.removeCardById(intersectingPlaygroundCard.card.localId);
+    this.removeCardById(moved.localId);
+    this.removeCardById(intersectingPlaygroundCard.localId);
 
     const loadingCard = this.createLoadingPlaygroundCard(
       intersectingPlaygroundCard.x,
@@ -138,7 +135,7 @@ export class IndexPage implements OnInit {
         intersectingPlaygroundCard.y
       );
     } finally {
-      this.removeCardById(loadingCard.card.localId);
+      this.removeCardById(loadingCard.localId);
     }
   }
 
@@ -154,7 +151,7 @@ export class IndexPage implements OnInit {
       const other = this.findPlayGroundCardById(otherEl.nativeElement.dataset['id']!);
       if (!other) continue;
 
-      if (movedId === other.card.localId) continue;
+      if (movedId === other.localId) continue;
 
       if (other.isLoading) continue;
 
@@ -172,18 +169,18 @@ export class IndexPage implements OnInit {
 
   private updatePlaygroundCardPosition(id: string, position: Point): void {
     this.playGroundCards = this.playGroundCards.map((card) =>
-      card.card.localId === id ? { ...card, x: position.x, y: position.y } : card
+      card.localId === id ? { ...card, x: position.x, y: position.y } : card
     );
   }
 
   private updateSidebarCardPosition(id: string, x: number, y: number): void {
     this.sidebarCards = this.sidebarCards.map((card) =>
-      card.card.localId === id ? { ...card, lastX: x, lastY: y } : card
+      card.localId === id ? { ...card, lastX: x, lastY: y } : card
     );
   }
 
   private findPlayGroundCardById(id: string): PlaygroundCard | undefined {
-    return this.playGroundCards.find((i) => i.card.localId === id);
+    return this.playGroundCards.find((i) => i.localId === id);
   }
 
   private areCardsOverlapping(a: DOMRect, b: DOMRect): boolean {
@@ -194,15 +191,20 @@ export class IndexPage implements OnInit {
     event.preventDefault();
     const target = event.target as HTMLDivElement;
     const card = target.closest('.item') as HTMLDivElement;
+
     const id: string | undefined = card.dataset['id'];
 
     if (!id) return;
 
-    this.playGroundCards = this.playGroundCards.filter((item) => item.card.localId !== id);
+    if (this.findPlayGroundCardById(id)?.isLoading) {
+      return;
+    }
+
+    this.playGroundCards = this.playGroundCards.filter((item) => item.localId !== id);
   }
 
   protected removeCardById(id: string): void {
-    this.playGroundCards = this.playGroundCards.filter((card) => card.card.localId !== id);
+    this.playGroundCards = this.playGroundCards.filter((card) => card.localId !== id);
   }
 
   protected createPlaygroundCard(
@@ -213,7 +215,8 @@ export class IndexPage implements OnInit {
     isLoading: boolean = false
   ): PlaygroundCard {
     const card = {
-      card: { icon, word, localId: crypto.randomUUID() },
+      card: { icon, word, id: '-1' },
+      localId: crypto.randomUUID(),
       x,
       y,
       isLoading,
@@ -230,7 +233,12 @@ export class IndexPage implements OnInit {
       }
     }
 
-    const sidebarCard = { card: { icon, word, localId: crypto.randomUUID() }, lastX: 0, lastY: 0 };
+    const sidebarCard = {
+      card: { icon, word, id: '-1' },
+      localId: crypto.randomUUID(),
+      lastX: 0,
+      lastY: 0,
+    };
     this.sidebarCards.push(sidebarCard);
     return sidebarCard;
   }

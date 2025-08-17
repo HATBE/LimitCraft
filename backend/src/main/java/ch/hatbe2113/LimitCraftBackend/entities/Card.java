@@ -1,22 +1,40 @@
 package ch.hatbe2113.LimitCraftBackend.entities;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import jakarta.persistence.*;
+import org.hibernate.annotations.UuidGenerator;
 
-@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
+@Entity
+@Table(name = "cards")
 public class Card {
+    @Id
+    @GeneratedValue
+    @UuidGenerator
+    @Column(name = "id", nullable = false, updatable = false, length = 36)
+    private String id;
+
+    @Column(name = "word", nullable = false)
     private String word;
+
+    @Column(name = "icon", nullable = false)
     private String icon;
 
-    public Card(String word, String icon) {
-        this.word = word;
-        this.icon = icon;
+    public String getId() {
+        return id;
+    }
+
+    public String getWord() {
+        return word;
     }
 
     public String getIcon() {
         return icon;
     }
 
-    public String getWord() {
-        return word;
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
+    public void setWord(String word) {
+        this.word = word;
     }
 }

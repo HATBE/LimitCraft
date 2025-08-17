@@ -15,23 +15,23 @@ public class AiPrompt {
         this.keep_alive = keep_alive;
     }
 
-    public String getModel() {
-        return model;
-    }
-
     public String getPrompt() {
-        return prompt;
-    }
-
-    public String getSystem() {
-        return system;
-    }
-
-    public boolean getStream() {
-        return stream;
+        return this.prompt;
     }
 
     public String getKeep_alive() {
-        return keep_alive;
+        return this.keep_alive;
+    }
+
+    public String getSystem() {
+        return this.system;
+    }
+
+    public String getModel() {
+        return this.model;
+    }
+
+    public boolean getStream() {
+        return this.stream;
     }
 }
