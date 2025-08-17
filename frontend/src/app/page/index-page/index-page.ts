@@ -104,6 +104,10 @@ export class IndexPage implements OnInit {
     });
   }
 
+  protected disableContext(event: Event) {
+    event.preventDefault();
+  }
+
   protected onPlaygroundCardDragStarted(id: string): void {
     const movedEl = this.dragEls.find((el) => el.nativeElement.dataset['id'] === id);
     if (!movedEl) return;

@@ -1,4 +1,4 @@
-<div class="app">
+<div class="app" (contextmenu)="disableContext($event)">
   <div class="playground" #playgroundElRef>
     @for (card of playGroundCards; track card.localId) {
     <div
