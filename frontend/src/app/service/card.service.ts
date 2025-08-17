@@ -9,6 +9,8 @@ import Card from '../model/Card';
 export default class CardService {
   constructor(protected http: HttpClient) {}
 
+  private lsKey = 'cards';
+
   public async combineWords(cardName1: string, cardName2: string): Promise<Card> {
     try {
       return await firstValueFrom(
@@ -17,5 +19,25 @@ export default class CardService {
     } catch (error) {
       throw error;
     }
+  }
+
+  public saveSidebarCards(cards: Card[]): void {
+    localStorage.setItem(this.lsKey, JSON.stringify(cards));
+  }
+
+  public getSidebordCards(): Card[] | null {
+    const item = localStorage.getItem(this.lsKey);
+
+    if (!item) {
+      return null;
+    }
+
+    try {
+      return JSON.parse(item);
+    } catch (error) {
+      console.log(error);
+    }
+
+    return null;
   }
 }

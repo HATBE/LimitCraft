@@ -4,7 +4,7 @@ import ch.hatbe2113.LimitCraftBackend.entities.AiPrompt;
 import ch.hatbe2113.LimitCraftBackend.entities.AiResponse;
 import ch.hatbe2113.LimitCraftBackend.entities.Card;
 import ch.hatbe2113.LimitCraftBackend.http.HttpRequest;
-import ch.hatbe2113.LimitCraftBackend.repositories.CardRepository;
+import ch.hatbe2113.LimitCraftBackend.repositories.ReceiptRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,15 +16,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class AiService {
     private final String modelName = "phi4:14b";
-    private final CardRepository cardRepository;
-
-    public AiService(final CardRepository cardRepository) {
-        this.cardRepository = cardRepository;
-    }
 
     public Card getCardFromWords(String word1, String word2) {
         String word = this.combineWords(word1, word2);
-
         String icon = this.getIcon(word);
 
         if(word == null || icon == null) {
@@ -33,13 +27,7 @@ public class AiService {
 
         word = word.substring(0, 1).toUpperCase() + word.substring(1); // first letter big, all the others small
 
-        Card card = new Card();
-        card.setIcon(icon);
-        card.setWord(word);
-
-        this.cardRepository.save(card);
-
-        return card;
+        return  new Card(word, icon);
     }
 
     private String combineWords(String word1, String word2) {

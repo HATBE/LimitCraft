@@ -4,7 +4,7 @@ import ch.hatbe2113.LimitCraftBackend.entities.Card;
 import ch.hatbe2113.LimitCraftBackend.entities.Recipe;
 import ch.hatbe2113.LimitCraftBackend.entities.requests.PostCardRequest;
 
-import ch.hatbe2113.LimitCraftBackend.repositories.CardRepository;
+import ch.hatbe2113.LimitCraftBackend.repositories.ReceiptRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,11 +13,11 @@ import java.util.Optional;
 @Service
 public class CardService {
     private final AiService aiService;
-    private final CardRepository cardRepository;
+    private final ReceiptRepository receiptRepository;
 
-    public CardService(AiService aiService, CardRepository cardRepository) {
+    public CardService(AiService aiService, ReceiptRepository receiptRepository) {
         this.aiService = aiService;
-        this.cardRepository = cardRepository;
+        this.receiptRepository = receiptRepository;
     }
 
     public List<Card> getCards() {
@@ -37,31 +37,26 @@ public class CardService {
         String word2 = request.getCardName2();
 
         // check if recipe is in db
-        Optional<Recipe> recipe = this.cardRepository.findByWords(word1, word2);
+        Optional<Recipe> recipe = this.receiptRepository.findByWords(word1, word2);
 
         Card card;
 
-        if(recipe.isEmpty()) {
-            // if not in db,
-            // 1. get word card from ai
+        if(recipe.isPresent()) {
+            // if it's in the db
+            card = new Card(recipe.get().getResultWord(), recipe.get().getResultIcon());
+            System.out.println("FROM MEMORY");
+        } else {
+            // if not in db
+            System.out.println("FROM AI");
             card = this.aiService.getCardFromWords(word1, word2);
-
-            // 2. TODO: check if word1 is in database
-            Card card1 = new Card();
-            card1.setWord(word1);
-
-            // 3. TODO: check if word2 is in database
-
-            // 4. TODO: create recipe
 
             Recipe newRecipe = new Recipe();
             newRecipe.setWord1(word1);
-            newRecipe.setWord1(word2);
+            newRecipe.setWord2(word2);
+            newRecipe.setResultWord(card.getWord());
+            newRecipe.setResultIcon(card.getIcon());
 
-
-        } else {
-            // if it is in db, just get the card
-            card = recipe.get().getResultWord();
+            this.receiptRepository.save(newRecipe);
         }
 
         return card;

@@ -13,6 +13,7 @@ import PlaygroundCard from '../../model/PlaygroundCard';
 import CardService from '../../service/card.service';
 import SidebarCard from '../../model/SidebarCard';
 import ZIndexOnCardDragDirective from '../../directive/ZIndexOnCardDrag.directive';
+import Card from '../../model/Card';
 
 @Component({
   selector: 'app-index-page',
@@ -30,10 +31,7 @@ export class IndexPage implements OnInit {
   public constructor(private cardService: CardService, private cdr: ChangeDetectorRef) {}
 
   public ngOnInit(): void {
-    this.createSideBarCard('💧', 'Water');
-    this.createSideBarCard('🔥', 'Fire');
-    this.createSideBarCard('🌬️', 'Wind');
-    this.createSideBarCard('🌎', 'Earth');
+    this.initSidebar();
   }
 
   protected onSidebarCardMoved(event: CdkDragMove<SidebarCard>): void {
@@ -42,6 +40,22 @@ export class IndexPage implements OnInit {
       event.pointerPosition.x,
       event.pointerPosition.y
     );
+  }
+
+  protected initSidebar(): void {
+    const sideBarCards = this.cardService.getSidebordCards();
+
+    if (!sideBarCards) {
+      this.createSideBarCard('💧', 'Water');
+      this.createSideBarCard('🔥', 'Fire');
+      this.createSideBarCard('🌬️', 'Wind');
+      this.createSideBarCard('🌎', 'Earth');
+      return;
+    }
+
+    sideBarCards.forEach((card) => {
+      this.createSideBarCard(card.icon, card.word);
+    });
   }
 
   protected async onSidebarCardDragEnded(event: CdkDragEnd<SidebarCard>): Promise<void> {
@@ -240,6 +254,13 @@ export class IndexPage implements OnInit {
       lastY: 0,
     };
     this.sidebarCards.push(sidebarCard);
+
+    const cards: Card[] = this.sidebarCards.map((card) => {
+      return card.card;
+    });
+
+    this.cardService.saveSidebarCards(cards);
+
     return sidebarCard;
   }
 }
