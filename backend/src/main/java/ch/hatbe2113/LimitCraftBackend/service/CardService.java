@@ -7,6 +7,7 @@ import ch.hatbe2113.LimitCraftBackend.entities.requests.PostCardRequest;
 import ch.hatbe2113.LimitCraftBackend.repositories.ReceiptRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,15 +22,14 @@ public class CardService {
     }
 
     public List<Card> getCards() {
-        return null;
-        /*List<Card> cards = new ArrayList<>();
+        List<Card> cards = new ArrayList<>();
 
         cards.add(new Card("Water", "\uD83D\uDCA7"));
         cards.add(new Card("Fire", "\uD83D\uDD25"));
         cards.add(new Card("Wind", "\uD83C\uDF2C\uFE0F"));
         cards.add(new Card("Earth", "\uD83C\uDF0E"));
 
-        return cards;*/
+        return cards;
     }
 
     public Card postCard(PostCardRequest request) {
@@ -49,6 +49,10 @@ public class CardService {
             // if not in db
             System.out.println("FROM AI");
             card = this.aiService.getCardFromWords(word1, word2);
+
+            Optional<Recipe> check = this.receiptRepository.findByResultWordName(card.getWord());
+
+            check.ifPresent(value -> card.setIcon(value.getResultIcon()));
 
             Recipe newRecipe = new Recipe();
             newRecipe.setWord1(word1);

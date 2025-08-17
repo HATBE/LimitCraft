@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import Card from '../model/Card';
+import PlaygroundCard from '../model/PlaygroundCard';
 
 @Injectable({
   providedIn: 'root',
@@ -9,7 +10,8 @@ import Card from '../model/Card';
 export default class CardService {
   constructor(protected http: HttpClient) {}
 
-  private lsKey = 'cards';
+  private sideBoardCardsKey = 'sideboardCards';
+  private playgroundCardsKey = 'playgroundCards';
 
   public async combineWords(cardName1: string, cardName2: string): Promise<Card> {
     try {
@@ -22,11 +24,11 @@ export default class CardService {
   }
 
   public saveSidebarCards(cards: Card[]): void {
-    localStorage.setItem(this.lsKey, JSON.stringify(cards));
+    localStorage.setItem(this.sideBoardCardsKey, JSON.stringify(cards));
   }
 
   public getSidebordCards(): Card[] | null {
-    const item = localStorage.getItem(this.lsKey);
+    const item = localStorage.getItem(this.sideBoardCardsKey);
 
     if (!item) {
       return null;
@@ -39,5 +41,27 @@ export default class CardService {
     }
 
     return null;
+  }
+
+  public getPlayGroundCards(): PlaygroundCard[] | null {
+    const item = localStorage.getItem(this.playgroundCardsKey);
+
+    if (!item) {
+      return null;
+    }
+
+    try {
+      return JSON.parse(item);
+    } catch (error) {
+      console.log(error);
+    }
+
+    return null;
+  }
+
+  public savePlaygroundCards(cards: PlaygroundCard[]): void {
+    cards = cards.filter((card) => !card.isLoading);
+
+    localStorage.setItem(this.playgroundCardsKey, JSON.stringify(cards));
   }
 }

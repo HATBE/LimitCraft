@@ -32,6 +32,7 @@ export class IndexPage implements OnInit {
 
   public ngOnInit(): void {
     this.initSidebar();
+    this.initPlayGround();
   }
 
   protected onSidebarCardMoved(event: CdkDragMove<SidebarCard>): void {
@@ -42,10 +43,22 @@ export class IndexPage implements OnInit {
     );
   }
 
-  protected initSidebar(): void {
-    const sideBarCards = this.cardService.getSidebordCards();
+  protected initPlayGround(): void {
+    const cards = this.cardService.getPlayGroundCards();
 
-    if (!sideBarCards) {
+    console.log(cards);
+
+    if (!cards) return;
+
+    cards.forEach((card) => {
+      this.createPlaygroundCard(card.card.icon, card.card.word, card.x, card.y);
+    });
+  }
+
+  protected initSidebar(): void {
+    const cards = this.cardService.getSidebordCards();
+
+    if (!cards) {
       this.createSideBarCard('💧', 'Water');
       this.createSideBarCard('🔥', 'Fire');
       this.createSideBarCard('🌬️', 'Wind');
@@ -53,7 +66,7 @@ export class IndexPage implements OnInit {
       return;
     }
 
-    sideBarCards.forEach((card) => {
+    cards.forEach((card) => {
       this.createSideBarCard(card.icon, card.word);
     });
   }
@@ -146,7 +159,8 @@ export class IndexPage implements OnInit {
         '❌',
         'ERROR',
         intersectingPlaygroundCard.x,
-        intersectingPlaygroundCard.y
+        intersectingPlaygroundCard.y,
+        true
       );
     } finally {
       this.removeCardById(loadingCard.localId);
@@ -185,6 +199,8 @@ export class IndexPage implements OnInit {
     this.playGroundCards = this.playGroundCards.map((card) =>
       card.localId === id ? { ...card, x: position.x, y: position.y } : card
     );
+
+    this.cardService.savePlaygroundCards(this.playGroundCards);
   }
 
   private updateSidebarCardPosition(id: string, x: number, y: number): void {
@@ -215,6 +231,8 @@ export class IndexPage implements OnInit {
     }
 
     this.playGroundCards = this.playGroundCards.filter((item) => item.localId !== id);
+
+    this.cardService.savePlaygroundCards(this.playGroundCards);
   }
 
   protected removeCardById(id: string): void {
@@ -237,6 +255,9 @@ export class IndexPage implements OnInit {
     };
 
     this.playGroundCards.push(card);
+
+    this.cardService.savePlaygroundCards(this.playGroundCards);
+
     return card;
   }
 
