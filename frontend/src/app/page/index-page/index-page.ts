@@ -10,12 +10,13 @@ import {
   ViewChildren,
 } from '@angular/core';
 import PlaygroundCard from '../../model/PlaygroundCard';
-import CardService from '../../service/CardService';
+import CardService from '../../service/card.service';
 import SidebarCard from '../../model/SidebarCard';
+import ZIndexOnCardDragDirective from '../../directive/ZIndexOnCardDrag.directive';
 
 @Component({
   selector: 'app-index-page',
-  imports: [CommonModule, DragDropModule],
+  imports: [CommonModule, DragDropModule, ZIndexOnCardDragDirective],
   templateUrl: './index-page.html',
   styleUrl: './index-page.css',
 })
@@ -28,15 +29,14 @@ export class IndexPage implements OnInit {
 
   public constructor(private cardService: CardService, private cdr: ChangeDetectorRef) {}
 
-  public ngOnInit() {
+  public ngOnInit(): void {
     this.createSideBarCard('💧', 'Water');
     this.createSideBarCard('🔥', 'Fire');
     this.createSideBarCard('🌬️', 'Wind');
     this.createSideBarCard('🌎', 'Earth');
   }
 
-  protected onSidebarCardMoved(event: CdkDragMove<SidebarCard>) {
-    // TODO: find center
+  protected onSidebarCardMoved(event: CdkDragMove<SidebarCard>): void {
     this.updateSidebarCardPosition(
       event.source.data.card.localId,
       event.pointerPosition.x,
@@ -44,7 +44,7 @@ export class IndexPage implements OnInit {
     );
   }
 
-  protected async onSidebarCardDragEnded(event: CdkDragEnd<SidebarCard>) {
+  protected async onSidebarCardDragEnded(event: CdkDragEnd<SidebarCard>): Promise<void> {
     event.source.reset();
 
     const { card: evtCard, lastX, lastY } = event.source.data as SidebarCard;
@@ -77,18 +77,16 @@ export class IndexPage implements OnInit {
     });
   }
 
-  protected onPlaygroundCardDragStarted(id: string) {
+  protected onPlaygroundCardDragStarted(id: string): void {
     const movedEl = this.dragEls.find((el) => el.nativeElement.dataset['id'] === id);
     if (!movedEl) return;
-    movedEl.nativeElement.style.zIndex = '999';
   }
 
-  protected async onPlaygroundCardDragEnded(event: CdkDragEnd, id: string) {
+  protected async onPlaygroundCardDragEnded(event: CdkDragEnd, id: string): Promise<void> {
     this.updatePlaygroundCardPosition(id, event.source.getFreeDragPosition());
 
     const movedEl = this.dragEls.find((el) => el.nativeElement.dataset['id'] === id);
     if (!movedEl) return;
-    movedEl.nativeElement.style.zIndex = 'auto';
 
     const moved = this.findPlayGroundCardById(movedEl.nativeElement.dataset['id']!);
 
@@ -104,18 +102,18 @@ export class IndexPage implements OnInit {
     await this.matchCards(intersectingPlaygroundCard, moved);
   }
 
-  private async matchCards(intersectingPlaygroundCard: PlaygroundCard, moved: PlaygroundCard) {
+  private async matchCards(
+    intersectingPlaygroundCard: PlaygroundCard,
+    moved: PlaygroundCard
+  ): Promise<void> {
     if (!intersectingPlaygroundCard) return;
 
     this.removeCardById(moved.card.localId);
     this.removeCardById(intersectingPlaygroundCard.card.localId);
 
-    const loadingCard = this.createPlaygroundCard(
-      '⏳',
-      'Loading',
+    const loadingCard = this.createLoadingPlaygroundCard(
       intersectingPlaygroundCard.x,
-      intersectingPlaygroundCard.y,
-      true
+      intersectingPlaygroundCard.y
     );
 
     try {
@@ -144,13 +142,16 @@ export class IndexPage implements OnInit {
     }
   }
 
+  private createLoadingPlaygroundCard(x: number, y: number): PlaygroundCard {
+    return this.createPlaygroundCard('⏳', 'Loading', x, y, true);
+  }
+
   private getIntersectingPlaygroundCard(
     movedId: string,
     cardEl: ElementRef<HTMLElement>
   ): PlaygroundCard | null {
     for (const otherEl of this.dragEls) {
       const other = this.findPlayGroundCardById(otherEl.nativeElement.dataset['id']!);
-
       if (!other) continue;
 
       if (movedId === other.card.localId) continue;
@@ -169,13 +170,13 @@ export class IndexPage implements OnInit {
     return null;
   }
 
-  private updatePlaygroundCardPosition(id: string, position: Point) {
+  private updatePlaygroundCardPosition(id: string, position: Point): void {
     this.playGroundCards = this.playGroundCards.map((card) =>
       card.card.localId === id ? { ...card, x: position.x, y: position.y } : card
     );
   }
 
-  private updateSidebarCardPosition(id: string, x: number, y: number) {
+  private updateSidebarCardPosition(id: string, x: number, y: number): void {
     this.sidebarCards = this.sidebarCards.map((card) =>
       card.card.localId === id ? { ...card, lastX: x, lastY: y } : card
     );
@@ -185,11 +186,11 @@ export class IndexPage implements OnInit {
     return this.playGroundCards.find((i) => i.card.localId === id);
   }
 
-  private areCardsOverlapping(a: DOMRect, b: DOMRect) {
+  private areCardsOverlapping(a: DOMRect, b: DOMRect): boolean {
     return a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
   }
 
-  protected onPlaygroundCardDelete(event: Event) {
+  protected onPlaygroundCardDelete(event: Event): void {
     event.preventDefault();
     const target = event.target as HTMLDivElement;
     const card = target.closest('.item') as HTMLDivElement;
@@ -200,7 +201,7 @@ export class IndexPage implements OnInit {
     this.playGroundCards = this.playGroundCards.filter((item) => item.card.localId !== id);
   }
 
-  protected removeCardById(id: string) {
+  protected removeCardById(id: string): void {
     this.playGroundCards = this.playGroundCards.filter((card) => card.card.localId !== id);
   }
 

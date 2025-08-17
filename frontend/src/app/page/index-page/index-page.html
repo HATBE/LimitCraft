@@ -12,6 +12,7 @@
       (cdkDragEnded)="onPlaygroundCardDragEnded($event, card.card.localId)"
       (cdkDragStarted)="onPlaygroundCardDragStarted(card.card.localId)"
       [cdkDragDisabled]="card.isLoading"
+      appZIndexOnCardDrag
     >
       <span class="icon">{{ card.card.icon }}</span>
       <span class="label">{{ card.card.word }}</span>
@@ -32,20 +33,6 @@
     >
       <span class="icon">{{ card.card.icon }}</span>
       <span class="label">{{ card.card.word }}</span>
-
-      <ng-template cdkDragPreview>
-        <div class="item">
-          <span class="icon">{{ card.card.icon }}</span>
-          <span class="label">{{ card.card.word }}</span>
-        </div>
-      </ng-template>
-
-      <ng-template cdkDragPlaceholder>
-        <div class="item">
-          <span class="icon">{{ card.card.icon }}</span>
-          <span class="label">{{ card.card.word }}</span>
-        </div>
-      </ng-template>
     </div>
     }
   </div>
