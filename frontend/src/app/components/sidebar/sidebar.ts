@@ -14,6 +14,7 @@ export class SidebarComponent {
   @Input() sidebarCards!: SidebarCard[];
   @Output() onSidebarCardDragEnded = new EventEmitter<CdkDragEnd<SidebarCard>>();
   @Output() onSidebarCardMoved = new EventEmitter<CdkDragMove<SidebarCard>>();
+  @Output() onDoubleClickSidebarCard = new EventEmitter<SidebarCard>();
 
   protected activeSidebarCardsFilter: string | null = null;
 

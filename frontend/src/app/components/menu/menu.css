@@ -1,0 +1,15 @@
+.menu {
+  position: fixed;
+  bottom: 0;
+  right: 400px;
+  z-index: 9999999999;
+}
+
+.menu button {
+  border: none;
+  outline: none;
+  background-color: transparent;
+  padding: 5px;
+  font-size: 20px;
+  cursor: pointer;
+}

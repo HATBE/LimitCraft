@@ -15,10 +15,17 @@ import SidebarCard from '../../model/SidebarCard';
 import ZIndexOnCardDragDirective from '../../directive/ZIndexOnCardDrag.directive';
 import { SidebarComponent } from '../../components/sidebar/sidebar';
 import Card from '../../model/Card';
+import { MenuComponent } from '../../components/menu/menu';
 
 @Component({
   selector: 'app-index-page',
-  imports: [CommonModule, DragDropModule, ZIndexOnCardDragDirective, SidebarComponent],
+  imports: [
+    CommonModule,
+    DragDropModule,
+    ZIndexOnCardDragDirective,
+    SidebarComponent,
+    MenuComponent,
+  ],
   templateUrl: './index-page.html',
   styleUrl: './index-page.css',
 })
@@ -43,6 +50,10 @@ export class IndexPage implements OnInit {
       event.pointerPosition.x,
       event.pointerPosition.y
     );
+  }
+
+  protected onCleanPlayground() {
+    this.playGroundCards = [];
   }
 
   protected initPlayGround(): void {
@@ -288,5 +299,27 @@ export class IndexPage implements OnInit {
     this.cardService.saveSidebarCards(cards);
 
     return sidebarCard;
+  }
+
+  protected onDoubleClickSidebarCard(card: SidebarCard): void {
+    this.createPlaygroundCard(
+      card.card.id,
+      card.card.icon,
+      card.card.word,
+      50 + Math.floor(Math.random() * this.playgroundRef.nativeElement.clientWidth - 200) + 1,
+      50 + Math.floor(Math.random() * this.playgroundRef.nativeElement.clientHeight - 100) + 1,
+      false
+    );
+  }
+
+  protected onDoubleClickPlaygroundCard(card: PlaygroundCard): void {
+    this.createPlaygroundCard(
+      card.card.id,
+      card.card.icon,
+      card.card.word,
+      card.x + 20,
+      card.y + 20,
+      false
+    );
   }
 }

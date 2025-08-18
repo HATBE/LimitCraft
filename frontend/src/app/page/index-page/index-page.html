@@ -13,6 +13,7 @@
       (cdkDragStarted)="onPlaygroundCardDragStarted(card.localId)"
       [cdkDragDisabled]="card.isLoading"
       appZIndexOnCardDrag
+      (dblclick)="onDoubleClickPlaygroundCard(card)"
     >
       <span class="icon">{{ card.card.icon }}</span>
       <span class="label">{{ card.card.word }}</span>
@@ -22,7 +23,10 @@
 
   <app-sidebar
     [sidebarCards]="sidebarCards"
+    (onDoubleClickSidebarCard)="onDoubleClickSidebarCard($event)"
     (onSidebarCardDragEnded)="onSidebarCardDragEnded($event)"
     (onSidebarCardMoved)="onSidebarCardMoved($event)"
   ></app-sidebar>
 </div>
+
+<app-menu (onCleanPlayground)="onCleanPlayground()"></app-menu>

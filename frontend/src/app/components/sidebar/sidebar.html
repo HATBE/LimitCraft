@@ -9,6 +9,7 @@
       [attr.data-id]="card.localId"
       (cdkDragMoved)="onSidebarCardMoved.emit($event)"
       (cdkDragEnded)="onSidebarCardDragEnded.emit($event)"
+      (dblclick)="onDoubleClickSidebarCard.emit(card)"
     >
       <span class="icon">{{ card.card.icon }}</span>
       <span class="label">{{ card.card.word }}</span>
