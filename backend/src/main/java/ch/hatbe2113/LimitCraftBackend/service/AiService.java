@@ -2,9 +2,8 @@ package ch.hatbe2113.LimitCraftBackend.service;
 
 import ch.hatbe2113.LimitCraftBackend.entities.AiPrompt;
 import ch.hatbe2113.LimitCraftBackend.entities.AiResponse;
-import ch.hatbe2113.LimitCraftBackend.entities.Card;
+import ch.hatbe2113.LimitCraftBackend.entities.WordCard;
 import ch.hatbe2113.LimitCraftBackend.http.HttpRequest;
-import ch.hatbe2113.LimitCraftBackend.repositories.ReceiptRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,7 +16,7 @@ import org.springframework.stereotype.Service;
 public class AiService {
     private final String modelName = "phi4:14b";
 
-    public Card getCardFromWords(String word1, String word2) {
+    public WordCard getCardFromWords(String word1, String word2) {
         String word = this.combineWords(word1, word2);
         String icon = this.getIcon(word);
 
@@ -31,7 +30,7 @@ public class AiService {
         word = word.split("\n")[0];
         word = word.split(" ")[0];
 
-        return  new Card(word, icon);
+        return new WordCard(word, icon);
     }
 
     private String combineWords(String word1, String word2) {

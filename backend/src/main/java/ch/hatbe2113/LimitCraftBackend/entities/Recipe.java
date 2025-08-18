@@ -4,7 +4,10 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.UuidGenerator;
 
 @Entity
-@Table(name = "recipe")
+@Table(name = "recipes",
+uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"word_card_1_id", "word_card2_id"})
+})
 public class Recipe {
     @Id
     @GeneratedValue
@@ -12,51 +15,39 @@ public class Recipe {
     @Column(name = "id", nullable = false, updatable = false, length = 36)
     private String id;
 
-    @Column(name = "word1", nullable = false)
-    private String word1;
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @JoinColumn(name = "word_card_1_id", nullable = false)
+    private WordCard wordCard1;
 
-    @Column(name = "word2", nullable = false)
-    private String word2;
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @JoinColumn(name = "word_card_2_id", nullable = false)
+    private WordCard wordCard2;
 
-    @Column(name = "resultWord", nullable = false)
-    private String resultWord;
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @JoinColumn(name = "result_word_id", nullable = false)
+    private WordCard resultWordCard;
 
-    @Column(name = "resultIcon", nullable = false)
-    private String resultIcon;
+    protected Recipe() {} // for JPA
 
-    public String getResultWord() {
-        return this.resultWord;
+    public Recipe(WordCard wordCard1, WordCard wordCard2, WordCard resultWordCard) {
+        this.wordCard1 = wordCard1;
+        this.wordCard2 = wordCard2;
+        this.resultWordCard = resultWordCard;
     }
 
     public String getId() {
-        return this.id;
+        return id;
     }
 
-    public String getWord1() {
-        return this.word1;
+    public WordCard getWordCard1() {
+        return wordCard1;
     }
 
-    public String getWord2() {
-        return this.word2;
+    public WordCard getWordCard2() {
+        return wordCard2;
     }
 
-    public String getResultIcon() {
-        return resultIcon;
-    }
-
-    public void setResultIcon(String resultIcon) {
-        this.resultIcon = resultIcon;
-    }
-
-    public void setWord1(String word1) {
-        this.word1 = word1;
-    }
-
-    public void setWord2(String word2) {
-        this.word2 = word2;
-    }
-
-    public void setResultWord(String resultWord) {
-        this.resultWord = resultWord;
+    public WordCard getResultWordCard() {
+        return resultWordCard;
     }
 }
