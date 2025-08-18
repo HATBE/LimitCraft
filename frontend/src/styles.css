@@ -81,9 +81,29 @@ body {
   justify-content: space-between;
 }
 
+.sidebar .searchbar button {
+  display: flex;
+  justify-content: center;
+  background-color: white;
+  align-items: center;
+  width: 40px;
+  outline: none;
+  border: none;
+  border-left: 1px black solid;
+  cursor: pointer;
+}
+
 .sidebar .searchbar input {
-  width: 400px;
+  width: 320px;
   padding: 10px;
+}
+
+.sidebar .searchbar span {
+  display: flex;
+  justify-content: center;
+  background-color: white;
+  align-items: center;
+  width: 40px;
 }
 
 .item {

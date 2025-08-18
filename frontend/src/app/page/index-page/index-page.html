@@ -24,7 +24,7 @@
 
   <div class="sidebar">
     <div class="item-container">
-      @for (card of sidebarCards; track card.localId) {
+      @for (card of onlyShowActiveSidebarCards(); track card.localId) {
       <div
         class="item"
         cdkDrag
@@ -39,9 +39,7 @@
       </div>
       }
     </div>
-    <!--<div class="searchbar">
-      <input type="text" placeholder="search" />
-    </div>-->
+    <app-searchbar (onSearchTermUpdate)="onSearchTermUpdate($event)"></app-searchbar>
   </div>
 </div>
 

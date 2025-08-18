@@ -14,10 +14,11 @@ import CardService from '../../service/card.service';
 import SidebarCard from '../../model/SidebarCard';
 import ZIndexOnCardDragDirective from '../../directive/ZIndexOnCardDrag.directive';
 import Card from '../../model/Card';
+import { Searchbar } from '../../components/searchbar/searchbar';
 
 @Component({
   selector: 'app-index-page',
-  imports: [CommonModule, DragDropModule, ZIndexOnCardDragDirective],
+  imports: [CommonModule, DragDropModule, ZIndexOnCardDragDirective, Searchbar],
   templateUrl: './index-page.html',
   styleUrl: './index-page.css',
 })
@@ -28,11 +29,28 @@ export class IndexPage implements OnInit {
   protected playGroundCards: PlaygroundCard[] = [];
   protected sidebarCards: SidebarCard[] = [];
 
+  protected activeSidebarFilter: string | null = null;
+
+  protected onSearchTermUpdate(newTerm: string | null) {
+    this.activeSidebarFilter = newTerm;
+  }
+
   public constructor(private cardService: CardService, private cdr: ChangeDetectorRef) {}
 
   public ngOnInit(): void {
     this.initSidebar();
     this.initPlayGround();
+  }
+
+  protected onlyShowActiveSidebarCards(): SidebarCard[] {
+    if (this.activeSidebarFilter === null || this.activeSidebarFilter == '')
+      return this.sidebarCards;
+
+    const filter = this.activeSidebarFilter;
+
+    return this.sidebarCards.filter((card) =>
+      card.card.word.toLowerCase().includes(filter.toLowerCase())
+    );
   }
 
   protected onSidebarCardMoved(event: CdkDragMove<SidebarCard>): void {
@@ -41,6 +59,10 @@ export class IndexPage implements OnInit {
       event.pointerPosition.x,
       event.pointerPosition.y
     );
+  }
+
+  protected onSearchbarChange(event: Event) {
+    this.activeSidebarFilter = (event.target as HTMLInputElement).value;
   }
 
   protected initPlayGround(): void {
