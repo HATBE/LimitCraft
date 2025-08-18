@@ -25,7 +25,11 @@ public class AiService {
             return null;
         }
 
+        icon = new String(Character.toChars(icon.codePointAt(0))); // only the emoji, in case AI thinks again it's funny
+
         word = word.substring(0, 1).toUpperCase() + word.substring(1); // first letter big, all the others small
+        word = word.split("\n")[0];
+        word = word.split(" ")[0];
 
         return  new Card(word, icon);
     }

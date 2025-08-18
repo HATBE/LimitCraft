@@ -37,6 +37,9 @@
       </div>
       }
     </div>
-    <app-searchbar (onSearchTermUpdate)="onSearchTermUpdate($event)"></app-searchbar>
+    <app-searchbar
+      [cardCount]="sidebarCards.length"
+      (onSearchTermUpdate)="onSearchTermUpdate($event)"
+    ></app-searchbar>
   </div>
 </div>

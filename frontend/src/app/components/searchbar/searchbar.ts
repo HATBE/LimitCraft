@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -10,11 +10,11 @@ import { FormsModule } from '@angular/forms';
 })
 export class SearchbarComponent {
   @Output() onSearchTermUpdate = new EventEmitter<string | null>();
+  @Input() cardCount = 0;
 
   protected searchTerm: string | null = null;
 
   protected onSearchbarInput(event: Event) {
-    this.searchTerm = (event.target as HTMLInputElement).value;
     this.onSearchTermUpdate.emit(this.searchTerm);
   }
 

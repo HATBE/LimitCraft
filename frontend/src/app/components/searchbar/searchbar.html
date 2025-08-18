@@ -1,5 +1,10 @@
 <div class="searchbar">
   <span>🔍</span>
-  <input type="text" placeholder="search a word" (input)="onSearchbarInput($event)" />
+  <input
+    type="text"
+    [placeholder]="`Search (${cardCount}) items...`"
+    [(ngModel)]="searchTerm"
+    (input)="onSearchbarInput($event)"
+  />
   <button (click)="onClearSearchbar()">X</button>
 </div>

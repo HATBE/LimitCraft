@@ -1,0 +1,33 @@
+.searchbar {
+  position: fixed;
+  bottom: 0;
+  width: 400px;
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px black solid;
+}
+
+.searchbar button {
+  display: flex;
+  justify-content: center;
+  background-color: white;
+  align-items: center;
+  width: 40px;
+  outline: none;
+  border: none;
+  border-left: 1px black solid;
+  cursor: pointer;
+}
+
+.searchbar input {
+  width: 320px;
+  padding: 10px;
+}
+
+.searchbar span {
+  display: flex;
+  justify-content: center;
+  background-color: white;
+  align-items: center;
+  width: 40px;
+}

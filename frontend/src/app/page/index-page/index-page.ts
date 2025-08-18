@@ -29,10 +29,10 @@ export class IndexPage implements OnInit {
   protected playGroundCards: PlaygroundCard[] = [];
   protected sidebarCards: SidebarCard[] = [];
 
-  protected activeSidebarFilter: string | null = null;
+  protected activeSidebarCardsFilter: string | null = null;
 
   protected onSearchTermUpdate(newTerm: string | null) {
-    this.activeSidebarFilter = newTerm;
+    this.activeSidebarCardsFilter = newTerm;
   }
 
   public constructor(private cardService: CardService, private cdr: ChangeDetectorRef) {}
@@ -43,10 +43,10 @@ export class IndexPage implements OnInit {
   }
 
   protected onlyShowActiveSidebarCards(): SidebarCard[] {
-    if (this.activeSidebarFilter === null || this.activeSidebarFilter == '')
+    if (this.activeSidebarCardsFilter === null || this.activeSidebarCardsFilter == '')
       return this.sidebarCards;
 
-    const filter = this.activeSidebarFilter;
+    const filter = this.activeSidebarCardsFilter;
 
     return this.sidebarCards.filter((card) =>
       card.card.word.toLowerCase().includes(filter.toLowerCase())
@@ -62,7 +62,7 @@ export class IndexPage implements OnInit {
   }
 
   protected onSearchbarChange(event: Event) {
-    this.activeSidebarFilter = (event.target as HTMLInputElement).value;
+    this.activeSidebarCardsFilter = (event.target as HTMLInputElement).value;
   }
 
   protected initPlayGround(): void {
