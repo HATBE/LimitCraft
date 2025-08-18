@@ -21,6 +21,7 @@ body::-webkit-scrollbar {
 
 body {
   overflow-x: hidden;
+  background-color: #3c3c3c;
 }
 
 input,
