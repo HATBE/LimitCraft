@@ -13,37 +13,6 @@
   overflow: hidden;
 }
 
-.item {
-  cursor: grab;
-  background-color: rgb(255, 255, 255);
-  display: inline-flex;
-  padding: 6px 10px;
-  gap: 5px;
-  border: 1px black solid;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
-  font-weight: 600;
-  line-height: 1.2;
-  white-space: nowrap;
-  user-select: none;
-  border-radius: 10px;
-}
-
 .item.absolute {
   position: absolute;
-}
-
-.sidebar {
-  position: relative;
-  background-color: #3c3c3c;
-  border-left: 1px rgb(92, 92, 92) solid;
-  width: 100%;
-  min-height: 100dvh;
-}
-.sidebar .item-container {
-  padding: 20px;
-  margin-bottom: 50px;
-}
-
-.sidebar .item {
-  margin: 1px;
 }

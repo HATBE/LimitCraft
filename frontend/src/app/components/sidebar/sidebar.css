@@ -1,0 +1,15 @@
+.sidebar {
+  position: relative;
+  background-color: #3c3c3c;
+  border-left: 1px rgb(92, 92, 92) solid;
+  width: 100%;
+  min-height: 100dvh;
+}
+.sidebar .item-container {
+  padding: 20px;
+  margin-bottom: 50px;
+}
+
+.sidebar .item {
+  margin: 1px;
+}

@@ -13,12 +13,12 @@ import PlaygroundCard from '../../model/PlaygroundCard';
 import CardService from '../../service/card.service';
 import SidebarCard from '../../model/SidebarCard';
 import ZIndexOnCardDragDirective from '../../directive/ZIndexOnCardDrag.directive';
+import { SidebarComponent } from '../../components/sidebar/sidebar';
 import Card from '../../model/Card';
-import { SearchbarComponent } from '../../components/searchbar/searchbar';
 
 @Component({
   selector: 'app-index-page',
-  imports: [CommonModule, DragDropModule, ZIndexOnCardDragDirective, SearchbarComponent],
+  imports: [CommonModule, DragDropModule, ZIndexOnCardDragDirective, SidebarComponent],
   templateUrl: './index-page.html',
   styleUrl: './index-page.css',
 })
@@ -26,31 +26,15 @@ export class IndexPage implements OnInit {
   @ViewChildren('dragElRef', { read: ElementRef }) dragEls!: QueryList<ElementRef<HTMLElement>>;
   @ViewChild('playgroundElRef', { static: true }) playgroundRef!: ElementRef<HTMLElement>;
 
-  protected playGroundCards: PlaygroundCard[] = [];
   protected sidebarCards: SidebarCard[] = [];
 
-  protected activeSidebarCardsFilter: string | null = null;
-
-  protected onSearchTermUpdate(newTerm: string | null) {
-    this.activeSidebarCardsFilter = newTerm;
-  }
+  protected playGroundCards: PlaygroundCard[] = [];
 
   public constructor(private cardService: CardService, private cdr: ChangeDetectorRef) {}
 
   public ngOnInit(): void {
-    this.initSidebar();
     this.initPlayGround();
-  }
-
-  protected onlyShowActiveSidebarCards(): SidebarCard[] {
-    if (this.activeSidebarCardsFilter === null || this.activeSidebarCardsFilter == '')
-      return this.sidebarCards;
-
-    const filter = this.activeSidebarCardsFilter;
-
-    return this.sidebarCards.filter((card) =>
-      card.card.word.toLowerCase().includes(filter.toLowerCase())
-    );
+    this.initSidebar();
   }
 
   protected onSidebarCardMoved(event: CdkDragMove<SidebarCard>): void {
@@ -59,10 +43,6 @@ export class IndexPage implements OnInit {
       event.pointerPosition.x,
       event.pointerPosition.y
     );
-  }
-
-  protected onSearchbarChange(event: Event) {
-    this.activeSidebarCardsFilter = (event.target as HTMLInputElement).value;
   }
 
   protected initPlayGround(): void {
@@ -81,15 +61,15 @@ export class IndexPage implements OnInit {
     const cards = this.cardService.getSidebordCards();
 
     if (!cards) {
-      this.createSideBarCard('💧', 'Water');
-      this.createSideBarCard('🔥', 'Fire');
-      this.createSideBarCard('🌬️', 'Wind');
-      this.createSideBarCard('🌎', 'Earth');
+      this.createSidebarCard('💧', 'Water');
+      this.createSidebarCard('🔥', 'Fire');
+      this.createSidebarCard('🌬️', 'Wind');
+      this.createSidebarCard('🌎', 'Earth');
       return;
     }
 
     cards.forEach((card) => {
-      this.createSideBarCard(card.icon, card.word);
+      this.createSidebarCard(card.icon, card.word);
     });
   }
 
@@ -178,7 +158,7 @@ export class IndexPage implements OnInit {
         intersectingPlaygroundCard.x,
         intersectingPlaygroundCard.y
       );
-      this.createSideBarCard(card.icon, card.word);
+      this.createSidebarCard(card.icon, card.word);
     } catch (error) {
       console.log(error);
       this.createPlaygroundCard(
@@ -287,7 +267,7 @@ export class IndexPage implements OnInit {
     return card;
   }
 
-  protected createSideBarCard(icon: string, word: string): SidebarCard | null {
+  protected createSidebarCard(icon: string, word: string): SidebarCard | null {
     for (const card of this.sidebarCards) {
       if (card.card.word === word) {
         return null;
