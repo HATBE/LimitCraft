@@ -48,28 +48,22 @@ export class IndexPage implements OnInit {
   protected initPlayGround(): void {
     const cards = this.cardService.getPlayGroundCards();
 
-    console.log(cards);
-
     if (!cards) return;
 
     cards.forEach((card) => {
-      this.createPlaygroundCard(card.card.icon, card.card.word, card.x, card.y);
+      this.createPlaygroundCard(card.card.id, card.card.icon, card.card.word, card.x, card.y);
     });
   }
 
-  protected initSidebar(): void {
-    const cards = this.cardService.getSidebordCards();
+  protected async initSidebar(): Promise<void> {
+    let cards = this.cardService.getSidebordCards();
 
     if (!cards) {
-      this.createSidebarCard('💧', 'Water');
-      this.createSidebarCard('🔥', 'Fire');
-      this.createSidebarCard('🌬️', 'Wind');
-      this.createSidebarCard('🌎', 'Earth');
-      return;
+      cards = (await this.cardService.getInitialCards()) ?? [];
     }
 
     cards.forEach((card) => {
-      this.createSidebarCard(card.icon, card.word);
+      this.createSidebarCard(card.id, card.icon, card.word);
     });
   }
 
@@ -85,7 +79,7 @@ export class IndexPage implements OnInit {
     x = Math.max(0, Math.min(x, rect.width));
     y = Math.max(0, Math.min(y, rect.height));
 
-    const created = this.createPlaygroundCard(evtCard.icon, evtCard.word, x, y);
+    const created = this.createPlaygroundCard(evtCard.id, evtCard.icon, evtCard.word, x, y);
 
     this.cdr.detectChanges();
     requestAnimationFrame(() => {
@@ -122,8 +116,9 @@ export class IndexPage implements OnInit {
     if (!movedEl) return;
 
     const moved = this.findPlayGroundCardById(movedEl.nativeElement.dataset['id']!);
-
     if (!moved) return;
+
+    console.log(moved);
 
     const intersectingPlaygroundCard = this.getIntersectingPlaygroundCard(moved.localId, movedEl);
 
@@ -148,20 +143,22 @@ export class IndexPage implements OnInit {
 
     try {
       const card = await this.cardService.combineWords(
-        moved.card.word,
-        intersectingPlaygroundCard.card.word
+        moved.card.id,
+        intersectingPlaygroundCard.card.id
       );
 
       this.createPlaygroundCard(
+        card.id,
         card.icon,
         card.word,
         intersectingPlaygroundCard.x,
         intersectingPlaygroundCard.y
       );
-      this.createSidebarCard(card.icon, card.word);
+      this.createSidebarCard(card.id, card.icon, card.word);
     } catch (error) {
-      console.log(error);
+      console.error(error);
       this.createPlaygroundCard(
+        '-1',
         '❌',
         'ERROR',
         intersectingPlaygroundCard.x,
@@ -174,7 +171,7 @@ export class IndexPage implements OnInit {
   }
 
   private createLoadingPlaygroundCard(x: number, y: number): PlaygroundCard {
-    return this.createPlaygroundCard('⏳', 'Loading', x, y, true);
+    return this.createPlaygroundCard('-1', '⏳', 'Loading', x, y, true);
   }
 
   private getIntersectingPlaygroundCard(
@@ -246,6 +243,7 @@ export class IndexPage implements OnInit {
   }
 
   protected createPlaygroundCard(
+    id: string,
     icon: string,
     word: string,
     x: number,
@@ -253,7 +251,7 @@ export class IndexPage implements OnInit {
     isLoading: boolean = false
   ): PlaygroundCard {
     const card = {
-      card: { icon, word, id: '-1' },
+      card: { icon, word, id },
       localId: crypto.randomUUID(),
       x,
       y,
@@ -267,15 +265,16 @@ export class IndexPage implements OnInit {
     return card;
   }
 
-  protected createSidebarCard(icon: string, word: string): SidebarCard | null {
+  protected createSidebarCard(id: string, icon: string, word: string): SidebarCard | null {
+    // dont add if already in sidebar
     for (const card of this.sidebarCards) {
-      if (card.card.word === word) {
+      if (card.card.id === id) {
         return null;
       }
     }
 
     const sidebarCard = {
-      card: { icon, word, id: '-1' },
+      card: { icon, word, id },
       localId: crypto.randomUUID(),
       lastX: 0,
       lastY: 0,
