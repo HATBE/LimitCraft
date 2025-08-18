@@ -8,8 +8,9 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './searchbar.html',
   styleUrl: './searchbar.css',
 })
-export class Searchbar {
+export class SearchbarComponent {
   @Output() onSearchTermUpdate = new EventEmitter<string | null>();
+
   protected searchTerm: string | null = null;
 
   protected onSearchbarInput(event: Event) {

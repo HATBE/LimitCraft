@@ -1,5 +1,3 @@
-<header>Limit Craft</header>
-
 <div class="app" (contextmenu)="disableContext($event)">
   <div class="playground" #playgroundElRef>
     @for (card of playGroundCards; track card.localId) {
@@ -42,8 +40,3 @@
     <app-searchbar (onSearchTermUpdate)="onSearchTermUpdate($event)"></app-searchbar>
   </div>
 </div>
-
-<footer>
-  Clone of
-  <a target="_blank" draggable="false" href="https://neal.fun/infinite-craft">Infinite Craft</a>
-</footer>

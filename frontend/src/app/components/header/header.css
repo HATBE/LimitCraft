@@ -1,0 +1,11 @@
+header {
+  z-index: 1;
+  position: fixed;
+  top: 0;
+  color: white;
+  display: inline-block;
+  margin: 10px;
+  font-size: 30px;
+  font-weight: 700;
+  font-family: 'Courier New', Courier, monospace;
+}

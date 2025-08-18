@@ -10,32 +10,13 @@ html {
   font-family: Arial, Helvetica, sans-serif;
   margin: 0;
   padding: 0;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
-header {
-  z-index: 1;
-  position: fixed;
-  top: 0;
-  color: white;
-  display: inline-block;
-  margin: 10px;
-  font-size: 30px;
-  font-weight: 700;
-  font-family: 'Courier New', Courier, monospace;
-}
-
-footer {
-  z-index: 1;
-  position: fixed;
-  bottom: 0;
-  color: white;
-  display: inline-block;
-  margin: 7px;
-  font-size: 15px;
-}
-
-footer a {
-  color: white;
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
 }
 
 body {

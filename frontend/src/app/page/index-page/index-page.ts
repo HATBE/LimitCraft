@@ -14,11 +14,11 @@ import CardService from '../../service/card.service';
 import SidebarCard from '../../model/SidebarCard';
 import ZIndexOnCardDragDirective from '../../directive/ZIndexOnCardDrag.directive';
 import Card from '../../model/Card';
-import { Searchbar } from '../../components/searchbar/searchbar';
+import { SearchbarComponent } from '../../components/searchbar/searchbar';
 
 @Component({
   selector: 'app-index-page',
-  imports: [CommonModule, DragDropModule, ZIndexOnCardDragDirective, Searchbar],
+  imports: [CommonModule, DragDropModule, ZIndexOnCardDragDirective, SearchbarComponent],
   templateUrl: './index-page.html',
   styleUrl: './index-page.css',
 })
