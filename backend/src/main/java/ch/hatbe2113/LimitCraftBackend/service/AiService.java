@@ -15,22 +15,23 @@ import org.springframework.stereotype.Service;
 @Service
 public class AiService {
     private final String modelName = "phi4:14b";
+    private final String aiServerGenerateUrl = "http://localhost:11435/api/generate";
 
     public WordCard getCardFromWords(String word1, String word2) {
-        String word = this.combineWords(word1, word2);
-        String icon = this.getIcon(word);
+        String resultWord = this.combineWords(word1, word2);
+        String resultIcon = this.getIcon(resultWord);
 
-        if(word == null || icon == null) {
+        if(resultWord == null || resultIcon == null) {
             return null;
         }
 
-        icon = new String(Character.toChars(icon.codePointAt(0))); // only the emoji, in case AI thinks again it's funny
+        resultIcon = new String(Character.toChars(resultIcon.codePointAt(0))); // only the emoji (first), in case AI thinks again it's funny
 
-        word = word.substring(0, 1).toUpperCase() + word.substring(1); // first letter big, all the others small
-        word = word.split("\n")[0];
-        word = word.split(" ")[0];
+        resultWord = resultWord.substring(0, 1).toUpperCase() + resultWord.substring(1); // first letter big, all the others small
+        resultWord = resultWord.split("\n")[0]; // remove \n that AI sometimes adds
+        resultWord = resultWord.split(" ")[0]; // remove space that AI sometimes adds
 
-        return new WordCard(word, icon);
+        return new WordCard(resultWord, resultIcon);
     }
 
     private String combineWords(String word1, String word2) {
@@ -60,16 +61,16 @@ public class AiService {
         HttpRequest http = new HttpRequest();
 
         try {
-            Response wordResponse = http.post("http://localhost:11435/api/generate", Entity.entity(prompt, MediaType.APPLICATION_JSON));
+            Response wordResponse = http.post(this.aiServerGenerateUrl, Entity.entity(prompt, MediaType.APPLICATION_JSON));
 
             if(wordResponse.getStatus() != 200) {
-               System.out.println("AI Request: NOT a 200 Response!");
+               System.out.println("ERROR: AI Request: NOT a 200 Response!");
                return null;
             }
 
             String wordBody = wordResponse.readEntity(String.class);
-
             AiResponse wordAiResponse = mapper.readValue(wordBody, new TypeReference<>(){});
+
             return wordAiResponse.getResponse();
         } catch(JsonProcessingException e) {
             e.printStackTrace();

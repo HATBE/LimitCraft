@@ -37,7 +37,6 @@ export class IndexPage implements OnInit {
 
   public async ngOnInit(): Promise<void> {
     this.cardService.initPlaygroundCards();
-    this.cardService.initSidebarCards();
   }
 
   protected onCleanPlayground() {
@@ -85,10 +84,6 @@ export class IndexPage implements OnInit {
         }
       });
     });
-  }
-
-  protected disableContext(event: Event) {
-    event.preventDefault();
   }
 
   protected onPlaygroundCardDragStarted(id: string): void {

@@ -8,10 +8,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface WordCardRepository  extends JpaRepository<WordCard, Integer> {
-    @Query("SELECT w FROM WordCard AS w WHERE w.id = :id")
+    @Query("SELECT w FROM WordCard AS w WHERE w.id = :id ORDER BY w.id LIMIT 1")
     Optional<WordCard> findById(String id);
 
-    @Query("SELECT w FROM WordCard AS w WHERE w.word = :word")
+    @Query("SELECT w FROM WordCard AS w WHERE w.word = :word ORDER BY w.id LIMIT 1")
     Optional<WordCard> findByWord(String word);
 
     @Query("SELECT w FROM WordCard AS w WHERE w.isDefault = true")

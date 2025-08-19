@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { SearchbarComponent } from '../searchbar/searchbar';
-import { CdkDragEnd, CdkDragMove, DragDropModule } from '@angular/cdk/drag-drop';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { SearchbarComponent } from './searchbar/searchbar';
+import { CdkDragEnd } from '@angular/cdk/drag-drop';
 import SidebarCard from '../../model/SidebarCard';
 import CardService from '../../service/card.service';
 import { SidebarCardComponent } from './sidebar-card/sidebar-card';
@@ -12,13 +12,17 @@ import { SidebarCardComponent } from './sidebar-card/sidebar-card';
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.css',
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit {
   @Output() onSidebarCardDragEnded = new EventEmitter<CdkDragEnd<SidebarCard>>();
   @Output() onDoubleClickSidebarCard = new EventEmitter<SidebarCard>();
 
   private activeSidebarCardsFilter: string | null = null;
 
   public constructor(private cardService: CardService) {}
+
+  public async ngOnInit(): Promise<void> {
+    await this.cardService.initSidebarCards();
+  }
 
   protected getSidebarCards(): SidebarCard[] {
     return this.cardService.getSidebarCards();
@@ -31,12 +35,11 @@ export class SidebarComponent {
   protected getActiveSidebarCards(): SidebarCard[] {
     const sidebarCards = this.cardService.getSidebarCards();
 
-    if (this.activeSidebarCardsFilter === null || this.activeSidebarCardsFilter == '') {
-      return sidebarCards;
-    }
+    const searchTerm = this.activeSidebarCardsFilter?.trim().toLowerCase();
+    if (!searchTerm) return sidebarCards;
 
     return sidebarCards.filter((card) => {
-      card.card.word.toLowerCase().includes(this.activeSidebarCardsFilter!.toLowerCase());
+      return card.card.word.toLowerCase().includes(searchTerm);
     });
   }
 }

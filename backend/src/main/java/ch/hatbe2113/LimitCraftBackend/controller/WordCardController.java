@@ -21,8 +21,7 @@ public class WordCardController {
 
     @GetMapping(value = {"", "/"})
     public ResponseEntity<?> getInitialCards() {
-        List<WordCard> wordCards = this.wordCardService.getDefaultWordCards();
-        return ResponseEntity.ok(wordCards);
+        return ResponseEntity.ok(this.wordCardService.getDefaultWordCards());
     }
 
     @PostMapping(value = {"", "/"})

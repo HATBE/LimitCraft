@@ -17,11 +17,11 @@ public class PostCardRequest {
         return wordCardId2;
     }
 
-    public void setWordCardId1(String wordCardId1) {
+    public void setWordCardId1(String wordCardId1) { // setter for @Valid in controller
         this.wordCardId1 = wordCardId1;
     }
 
-    public void setWordCardId2(String wordCardId2) {
+    public void setWordCardId2(String wordCardId2) { // setter for @Valid in controller
         this.wordCardId2 = wordCardId2;
     }
 }

@@ -11,4 +11,8 @@ import { FooterCompoennt } from './components/footer/footer';
 })
 export class App {
   protected readonly title = signal('Limit Craft');
+
+  protected disableContext(event: Event) {
+    event.preventDefault();
+  }
 }

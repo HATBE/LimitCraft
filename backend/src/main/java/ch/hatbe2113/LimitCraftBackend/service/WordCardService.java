@@ -25,29 +25,30 @@ public class WordCardService {
 
     // TODO: make auto create for the default 4 items on startup
     public List<WordCard> getDefaultWordCards() {
-        List<WordCard> wordCards = this.wordCardRepository.findDefault();
-        return wordCards;
+        return this.wordCardRepository.findDefault();
     }
 
     public WordCard combineWordCards(PostCardRequest request) {
         WordCard wordCard1 = this.wordCardRepository.findById(request.getWordCardId1())
-                .orElseThrow(() -> new IllegalArgumentException("ID of WordCard 1 does not exist!"));
+                .orElseThrow(() -> new IllegalArgumentException("WordCard 1 does not exist!"));
         WordCard wordCard2 = this.wordCardRepository.findById(request.getWordCardId2())
-                .orElseThrow(() -> new IllegalArgumentException("ID of WordCard 2 does not exist!"));
+                .orElseThrow(() -> new IllegalArgumentException("WordCard 2 does not exist!"));
 
         Optional<Recipe> existingRecipe = this.receiptRepository.findByWordCardIds(wordCard1.getId(), wordCard2.getId());
 
         WordCard resultWordCard;
 
         if (existingRecipe.isPresent()) {
+            // recipe already exists in db, so it's cached
             resultWordCard = existingRecipe.get().getResultWordCard();
             System.out.printf("GOT %s + %s = %s from MEMORY%n", wordCard1.getWord(), wordCard2.getWord(), resultWordCard.getWord());
         } else {
+            // recipe does not exist in db cache yet, so wee ned AI to help
             WordCard candidate = this.aiService.getCardFromWords(wordCard1.getWord(), wordCard2.getWord());
 
             Optional<WordCard> existingWordCard = this.wordCardRepository.findByWord(candidate.getWord());
 
-            resultWordCard = existingWordCard.orElseGet(() -> this.wordCardRepository.save(candidate));
+            resultWordCard = existingWordCard.orElseGet(() -> this.wordCardRepository.save(candidate)); // when it does not already exist, save it to db
 
             Recipe newRecipe = new Recipe(wordCard1, wordCard2, resultWordCard);
             this.receiptRepository.save(newRecipe);
