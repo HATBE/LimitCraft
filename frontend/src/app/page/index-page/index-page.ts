@@ -5,7 +5,6 @@ import {
   Component,
   ElementRef,
   OnInit,
-  QueryList,
   ViewChild,
   ViewChildren,
 } from '@angular/core';
@@ -13,7 +12,6 @@ import PlaygroundCard from '../../model/PlaygroundCard';
 import CardService from '../../service/card.service';
 import SidebarCard from '../../model/SidebarCard';
 import { SidebarComponent } from '../../components/sidebar/sidebar';
-import Card from '../../model/Card';
 import { MenuComponent } from '../../components/menu/menu';
 import { PlaygroundComponent } from '../../components/playground/playground';
 
@@ -30,10 +28,6 @@ export class IndexPage implements OnInit {
 
   public async ngOnInit(): Promise<void> {
     this.cardService.initPlaygroundCards();
-  }
-
-  protected onCleanPlayground() {
-    this.cardService.cleanPlaygroundCards();
   }
 
   protected async onSidebarCardDragEnded(event: CdkDragEnd<SidebarCard>): Promise<void> {

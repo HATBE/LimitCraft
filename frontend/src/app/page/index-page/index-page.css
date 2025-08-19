@@ -4,3 +4,8 @@
   position: relative;
   align-items: start;
 }
+
+.playground-wrapper {
+  position: sticky;
+  top: 0;
+}

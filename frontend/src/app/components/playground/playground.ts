@@ -75,8 +75,6 @@ export class PlaygroundComponent {
     const moved = this.cardService.findPlaygroundCardById(movedEl.nativeElement.dataset['id']!);
     if (!moved) return;
 
-    console.log(moved);
-
     const intersectingPlaygroundCard = this.getIntersectingPlaygroundCard(moved.localId, movedEl);
 
     if (!intersectingPlaygroundCard) return;

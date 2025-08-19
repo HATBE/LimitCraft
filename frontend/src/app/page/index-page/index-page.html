@@ -1,8 +1,10 @@
 <div class="app">
-  <app-playground
-    (matchCards)="matchCards($event.intersectingPlaygroundCard, $event.moved)"
-    [getIntersectingPlaygroundCard]="getIntersectingPlaygroundCard.bind(this)"
-  ></app-playground>
+  <div class="playground-wrapper">
+    <app-playground
+      (matchCards)="matchCards($event.intersectingPlaygroundCard, $event.moved)"
+      [getIntersectingPlaygroundCard]="getIntersectingPlaygroundCard.bind(this)"
+    ></app-playground>
+  </div>
 
   <app-sidebar
     (onDoubleClickSidebarCard)="onDoubleClickSidebarCard($event)"
@@ -10,4 +12,4 @@
   ></app-sidebar>
 </div>
 
-<app-menu (onCleanPlayground)="onCleanPlayground()"></app-menu>
+<app-menu></app-menu>
