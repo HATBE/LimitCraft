@@ -45,3 +45,7 @@ input:focus {
   user-select: none;
   border-radius: 10px;
 }
+
+.sidebar .item {
+  margin: 1px;
+}

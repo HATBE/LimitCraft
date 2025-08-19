@@ -42,7 +42,6 @@ public class WordCardService {
         if (existingRecipe.isPresent()) {
             resultWordCard = existingRecipe.get().getResultWordCard();
             System.out.printf("GOT %s + %s = %s from MEMORY%n", wordCard1.getWord(), wordCard2.getWord(), resultWordCard.getWord());
-            return resultWordCard;
         } else {
             WordCard candidate = this.aiService.getCardFromWords(wordCard1.getWord(), wordCard2.getWord());
 

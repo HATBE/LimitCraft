@@ -1,23 +1,15 @@
 <div class="sidebar">
   <div class="item-container">
-    @for (card of onlyShowActiveSidebarCards(); track card.localId) {
-    <div
-      class="item"
-      cdkDrag
-      [cdkDragData]="card"
-      [cdkDragBoundary]="'.app'"
-      [attr.data-id]="card.localId"
-      (cdkDragMoved)="onSidebarCardMoved.emit($event)"
-      (cdkDragEnded)="onSidebarCardDragEnded.emit($event)"
-      (dblclick)="onDoubleClickSidebarCard.emit(card)"
-    >
-      <span class="icon">{{ card.card.icon }}</span>
-      <span class="label">{{ card.card.word }}</span>
-    </div>
+    @for (card of getActiveSidebarCards(); track card.localId) {
+    <app-sidebar-card
+      [card]="card"
+      (onSidebarCardDragEnded)="onSidebarCardDragEnded.emit($event)"
+      (onDoubleClickSidebarCard)="onDoubleClickSidebarCard.emit($event)"
+    ></app-sidebar-card>
     }
   </div>
   <app-searchbar
-    [cardCount]="sidebarCards.length"
+    [cardCount]="getSidebarCards().length"
     (onSearchTermUpdate)="onSearchTermUpdate($event)"
   ></app-searchbar>
 </div>

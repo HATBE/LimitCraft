@@ -1,6 +1,6 @@
 <div class="app" (contextmenu)="disableContext($event)">
   <div class="playground" #playgroundElRef>
-    @for (card of playGroundCards; track card.localId) {
+    @for (card of getPlaygroundCards(); track card.localId) {
     <div
       #dragElRef
       class="item absolute"
@@ -22,10 +22,8 @@
   </div>
 
   <app-sidebar
-    [sidebarCards]="sidebarCards"
     (onDoubleClickSidebarCard)="onDoubleClickSidebarCard($event)"
     (onSidebarCardDragEnded)="onSidebarCardDragEnded($event)"
-    (onSidebarCardMoved)="onSidebarCardMoved($event)"
   ></app-sidebar>
 </div>
 
