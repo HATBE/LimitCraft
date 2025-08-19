@@ -1,0 +1,21 @@
+<div class="playground" #playgroundElRef>
+  @for (card of getPlaygroundCards(); track card.localId) {
+  <div
+    #dragElRef
+    class="item absolute"
+    cdkDrag
+    [cdkDragBoundary]="'.playground'"
+    [cdkDragFreeDragPosition]="{ x: card.x, y: card.y }"
+    [attr.data-id]="card.localId"
+    (contextmenu)="onPlaygroundCardDelete($event)"
+    (cdkDragEnded)="onPlaygroundCardDragEnded($event, card.localId)"
+    (cdkDragStarted)="onPlaygroundCardDragStarted(card.localId)"
+    [cdkDragDisabled]="card.isLoading"
+    appZIndexOnCardDrag
+    (dblclick)="onDoubleClickPlaygroundCard(card)"
+  >
+    <span class="icon">{{ card.card.icon }}</span>
+    <span class="label">{{ card.card.word }}</span>
+  </div>
+  }
+</div>

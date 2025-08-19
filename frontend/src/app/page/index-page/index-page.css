@@ -4,15 +4,3 @@
   position: relative;
   align-items: start;
 }
-
-.playground {
-  position: sticky;
-  top: 0;
-  height: 100dvh;
-  background-color: #1c1c1c;
-  overflow: hidden;
-}
-
-.item.absolute {
-  position: absolute;
-}
