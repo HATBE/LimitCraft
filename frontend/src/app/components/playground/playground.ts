@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import {
-  ChangeDetectorRef,
+  AfterViewInit,
   Component,
   ElementRef,
   EventEmitter,
@@ -10,18 +10,19 @@ import {
   ViewChild,
   ViewChildren,
 } from '@angular/core';
-import ZIndexOnCardDragDirective from '../../directive/ZIndexOnCardDrag.directive';
-import { CdkDragEnd, DragDropModule } from '@angular/cdk/drag-drop';
+import { CdkDragEnd } from '@angular/cdk/drag-drop';
 import CardService from '../../service/card.service';
 import PlaygroundCard from '../../model/PlaygroundCard';
+import { PlaygroundCardComponent } from './playground-card/playground-card';
 
 @Component({
   selector: 'app-playground',
-  imports: [CommonModule, ZIndexOnCardDragDirective, DragDropModule],
+  standalone: true,
+  imports: [CommonModule, PlaygroundCardComponent],
   templateUrl: './playground.html',
   styleUrl: './playground.css',
 })
-export class PlaygroundComponent {
+export class PlaygroundComponent implements AfterViewInit {
   @Input() getIntersectingPlaygroundCard!: (
     movedId: string,
     cardEl: ElementRef<HTMLElement>
@@ -32,69 +33,57 @@ export class PlaygroundComponent {
     moved: PlaygroundCard;
   }>();
 
-  @ViewChildren('dragElRef', { read: ElementRef })
-  dragEls!: QueryList<ElementRef<HTMLElement>>;
-  @ViewChild('playgroundElRef', { static: true }) playgroundEl!: ElementRef<HTMLElement>;
+  @ViewChildren(PlaygroundCardComponent)
+  private cardComponents!: QueryList<PlaygroundCardComponent>;
+
+  @ViewChild('playgroundElRef', { static: true })
+  private playgroundEl!: ElementRef<HTMLElement>;
 
   public constructor(private cardService: CardService) {}
+
+  public ngAfterViewInit(): void {
+    this.cardComponents.changes.subscribe(() => {});
+  }
 
   public getPlaygroundElement(): ElementRef<HTMLElement> {
     return this.playgroundEl;
   }
 
-  public getDragEls(): QueryList<ElementRef<HTMLElement>> {
-    return this.dragEls;
+  public getDragEls(): ElementRef<HTMLElement>[] {
+    return this.cardComponents.toArray().map((c) => c.getDragEl());
+  }
+
+  public getCardComponents(): QueryList<PlaygroundCardComponent> {
+    return this.cardComponents;
   }
 
   protected getPlaygroundCards(): PlaygroundCard[] {
     return this.cardService.getPlaygroundCards();
   }
 
-  protected onPlaygroundCardDelete(event: Event): void {
-    event.preventDefault();
-    const target = event.target as HTMLDivElement;
-    const card = target.closest('.item') as HTMLDivElement;
-
-    const id: string | undefined = card.dataset['id'];
-
-    if (!id) return;
-
-    if (this.cardService.findPlaygroundCardById(id)?.isLoading) {
-      return;
-    }
-
-    this.cardService.deletePlaygroundCardById(id);
-  }
-
   protected async onPlaygroundCardDragEnded(event: CdkDragEnd, id: string): Promise<void> {
     this.cardService.updatePlaygroundCardPosition(id, event.source.getFreeDragPosition());
 
-    const movedEl = this.getDragEls().find((el) => el.nativeElement.dataset['id'] === id);
+    const movedEl = this.findDragElById(id);
     if (!movedEl) return;
 
-    const moved = this.cardService.findPlaygroundCardById(movedEl.nativeElement.dataset['id']!);
+    const moved = this.cardService.findPlaygroundCardById(id);
     if (!moved) return;
 
     const intersectingPlaygroundCard = this.getIntersectingPlaygroundCard(moved.localId, movedEl);
 
     if (!intersectingPlaygroundCard) return;
 
-    await this.matchCards.emit({ intersectingPlaygroundCard, moved });
+    this.matchCards.emit({ intersectingPlaygroundCard, moved });
   }
 
   protected onPlaygroundCardDragStarted(id: string): void {
-    const movedEl = this.getDragEls().find((el) => el.nativeElement.dataset['id'] === id);
+    const movedEl = this.findDragElById(id);
     if (!movedEl) return;
   }
 
-  protected onDoubleClickPlaygroundCard(card: PlaygroundCard): void {
-    this.cardService.createPlaygroundCard(
-      card.card.id,
-      card.card.icon,
-      card.card.word,
-      card.x + 20,
-      card.y + 20,
-      false
-    );
+  private findDragElById(id: string): ElementRef<HTMLElement> | null {
+    const card = this.cardComponents.find((card) => card.card.localId === id);
+    return card ? card.getDragEl() : null;
   }
 }

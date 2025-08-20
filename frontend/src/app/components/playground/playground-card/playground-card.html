@@ -1,0 +1,17 @@
+<div
+  #dragElRef
+  class="item absolute"
+  cdkDrag
+  [cdkDragBoundary]="'.playground'"
+  [cdkDragFreeDragPosition]="{ x: card.x, y: card.y }"
+  [attr.data-id]="card.localId"
+  (contextmenu)="onPlaygroundCardDelete($event)"
+  (cdkDragEnded)="onPlaygroundCardDragEnded.emit({ event: $event, id: card.localId })"
+  (cdkDragStarted)="onPlaygroundCardDragStarted.emit(card.localId)"
+  [cdkDragDisabled]="card.isLoading"
+  appZIndexOnCardDrag
+  (dblclick)="onDoubleClickPlaygroundCard(card)"
+>
+  <span class="icon">{{ card.card.icon }}</span>
+  <span class="label">{{ card.card.word }}</span>
+</div>

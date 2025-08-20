@@ -36,6 +36,14 @@ export default class CardService {
     }
   }
 
+  public async getInitialSidebarCards(): Promise<Card[] | null> {
+    try {
+      return await firstValueFrom(this.http.get<Card[]>('http://localhost:8081/api/v1/cards'));
+    } catch (error) {
+      throw error;
+    }
+  }
+
   public saveSidebarCardsToLocalStorage(cards: Card[]): void {
     localStorage.setItem(this.sidebarCardsLocalStorageKey, JSON.stringify(cards));
   }
@@ -173,13 +181,5 @@ export default class CardService {
     }
 
     return null;
-  }
-
-  public async getInitialSidebarCards(): Promise<Card[] | null> {
-    try {
-      return await firstValueFrom(this.http.get<Card[]>('http://localhost:8081/api/v1/cards'));
-    } catch (error) {
-      throw error;
-    }
   }
 }
